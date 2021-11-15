@@ -1,8 +1,18 @@
-import '../styles/globals.css'
-import type { AppProps } from 'next/app'
+import { NextPage } from 'next';
+import { AppProps } from 'next/dist/shared/lib/router/router';
+import { ThemeProvider } from 'styled-components';
 
-function MyApp({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />
-}
+import { theme, GlobalStyle } from 'styles';
 
-export default MyApp
+const WrappedComponent: NextPage<AppProps> = ({ Component, pageProps }: AppProps) => {
+  return (
+    <>
+      <ThemeProvider theme={theme}>
+        <GlobalStyle />
+        <Component {...pageProps} />
+      </ThemeProvider>
+    </>
+  );
+};
+
+export default WrappedComponent;
