@@ -6,7 +6,11 @@ export default class RootDocument extends Document {
       <Html>
         <Head>
           <link
-            href='https://fonts.googleapis.com/css2?family=Laila:wght@300;500&display=swap'
+            href='https://fonts.googleapis.com/css2?family=Laila:wght@300;500;700&display=swap'
+            rel='stylesheet'
+          />
+          <link
+            href='https://fonts.googleapis.com/css2?family=Hi+Melody&family=Laila:wght@300;500&display=swap'
             rel='stylesheet'
           />
         </Head>

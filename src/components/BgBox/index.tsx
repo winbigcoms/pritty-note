@@ -1,7 +1,8 @@
-import styled from 'styled-components';
 import { Dispatch, HTMLAttributes, SetStateAction } from 'react';
-
 import Image from 'next/image';
+
+import styled from 'styled-components';
+
 import { FileUpload } from '../FileUpload';
 
 interface BgBoxProps extends HTMLAttributes<HTMLDivElement> {
@@ -10,7 +11,6 @@ interface BgBoxProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 const Box = styled.div`
-  min-width: 1440px;
   width: 100vw;
   height: 100vh;
   position: relative;

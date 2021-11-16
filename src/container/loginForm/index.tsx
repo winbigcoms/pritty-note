@@ -1,5 +1,9 @@
-import { CustomButton, CustomText } from 'src/components';
+import React from 'react';
+
 import styled from 'styled-components';
+
+import { CustomButton, CustomText } from 'src/components';
+import { useRouter } from 'next/dist/client/router';
 
 const LoginFormBox = styled.div`
   width:60%
@@ -26,29 +30,36 @@ const LoginFormBox = styled.div`
     margin-top:44px;
   }
 
-  &>button{
+  & > button{
     margin:46px auto 0px;
     display:block;
     font-size:30px;
     width: 170px;
     height: 60px;
-    color: #aaa;
-    border: 1px solid #aaa;
+    border: 1px solid #000;
+    color: #000;
 
     &:hover{
       border: 1px solid #000;
-      color: #000;
     }
   }
 `;
 
-export const LoginForm = () => {
+const LoginFormContents = () => {
+  const router = useRouter();
+
+  const onLogin = () => {
+    router.push('/note');
+  };
+
   return (
     <LoginFormBox>
       <h2>Pritty Note</h2>
       <CustomText label='ID' />
       <CustomText label='PW' type='password' />
-      <CustomButton variant='outlined' text='Login' />
+      <CustomButton onClick={onLogin} variant='outlined' text='Login' />
     </LoginFormBox>
   );
 };
+
+export const LoginForm = React.memo(LoginFormContents);
