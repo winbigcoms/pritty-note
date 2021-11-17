@@ -7,11 +7,13 @@ import { LoginForm } from 'src/container/loginForm';
 
 const Home: NextPage = () => {
   const [imgSrc, setImgSrc] = useState('');
+  const [pageType,setPage] = useState('login')
   return (
     <>
       <Head>
         <title>Pritty Node</title>
       </Head>
+      
       <BgBox img={imgSrc} setImgSrc={setImgSrc}>
         <LoginForm />
       </BgBox>

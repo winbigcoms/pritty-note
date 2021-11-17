@@ -7,7 +7,7 @@ import { FileUpload } from '../FileUpload';
 
 interface BgBoxProps extends HTMLAttributes<HTMLDivElement> {
   img?: string;
-  setImgSrc: Dispatch<SetStateAction<string>>;
+  setImgSrc?: Dispatch<SetStateAction<string>>;
 }
 
 const Box = styled.div`
@@ -43,6 +43,7 @@ const Box = styled.div`
 
 export const BgBox = (props: BgBoxProps) => {
   const { img, children, setImgSrc } = props;
+  
 
   return (
     <Box>
@@ -52,7 +53,7 @@ export const BgBox = (props: BgBoxProps) => {
         layout='fill'
         priority={img ? false : true}
       />
-      <FileUpload setImgSrc={setImgSrc} />
+      {setImgSrc && <FileUpload setImgSrc={setImgSrc} />}
       {children}
     </Box>
   );

@@ -30,7 +30,7 @@ const LoginFormBox = styled.div`
     margin-top:44px;
   }
 
-  & > button{
+  & div > button{
     margin:46px auto 0px;
     display:block;
     font-size:30px;
@@ -45,6 +45,10 @@ const LoginFormBox = styled.div`
   }
 `;
 
+const FlexBox = styled.div`
+  display: flex;
+`;
+
 const LoginFormContents = () => {
   const router = useRouter();
 
@@ -52,12 +56,19 @@ const LoginFormContents = () => {
     router.push('/note');
   };
 
+  const onSignUp = () => {
+    router.push('/signUp',undefined,{shallow:true});
+  };
+
   return (
     <LoginFormBox>
       <h2>Pritty Note</h2>
       <CustomText label='ID' />
       <CustomText label='PW' type='password' />
-      <CustomButton onClick={onLogin} variant='outlined' text='Login' />
+      <FlexBox>
+        <CustomButton onClick={onLogin} variant='outlined' text='Login' />
+        <CustomButton onClick={onSignUp} variant='outlined' text='SignUp' />
+      </FlexBox>
     </LoginFormBox>
   );
 };
