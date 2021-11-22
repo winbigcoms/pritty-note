@@ -5,10 +5,11 @@ import styled from 'styled-components';
 import { Painting, InputTextField, RenderText } from 'src/components';
 
 import { NoteItemData } from 'src/type';
+import { NoteHome } from '..';
 
 interface NoteRendererProps {
   saveTyping: (value: string, id: string) => void;
-  noteItemData: NoteItemData;
+  noteItemData: NoteItemData | undefined;
   didNotWrite: (id: string) => void;
 }
 
@@ -31,6 +32,13 @@ const NoteRenderContainer = styled.div`
 
 export const NoteRenderer = (props: NoteRendererProps) => {
   const { noteItemData, didNotWrite, saveTyping } = props;
+  if (!noteItemData) {
+    return (
+      <NoteRenderContainer>
+        <NoteHome />
+      </NoteRenderContainer>
+    );
+  }
 
   return (
     <NoteRenderContainer>
@@ -39,6 +47,7 @@ export const NoteRenderer = (props: NoteRendererProps) => {
         if (contentData.type === 'text') {
           return (
             <RenderText
+              key={idx}
               content={contentData.content}
               saveTyping={saveTyping}
               didNotWrite={didNotWrite}
@@ -53,7 +62,7 @@ export const NoteRenderer = (props: NoteRendererProps) => {
               key={idx}
               saveTyping={saveTyping}
               didNotWrite={didNotWrite}
-              renderData={contentData}
+              renderDataId={contentData.id}
             />
           );
         }

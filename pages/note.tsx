@@ -1,118 +1,15 @@
-import { MouseEvent, useState } from 'react';
-import { NoteList, NoteRenderer } from 'src/container';
+import { MouseEvent, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { useRouter } from 'next/dist/client/router';
+
 import styled from 'styled-components';
 
-const mockData = [
-  {
-    type: 'folder',
-    title: '중제목1',
-    children: [
-      {
-        type: 'file',
-        title: '소제목1',
-        id: '1'
-      },
-      {
-        type: 'file',
-        title: '소제목2',
-        id: '2'
-      },
-      {
-        type: 'folder',
-        title: '소제목3',
-        children: [
-          {
-            type: 'file',
-            title: '내부소제목1',
-            id: '3'
-          },
-          {
-            type: 'file',
-            title: '내부소제목2',
-            id: '4'
-          }
-        ]
-      }
-    ]
-  },
-  {
-    type: 'file',
-    title: '소제목3',
-    id: '5'
-  },
-  {
-    type: 'file',
-    title: '소제목4',
-    id: '6'
-  },
-  {
-    type: 'file',
-    title: '소제목3',
-    id: '15'
-  },
-  {
-    type: 'file',
-    title: '소제목4',
-    id: '16'
-  },
-  {
-    type: 'file',
-    title: '소제목4',
-    id: '26'
-  },
-  {
-    type: 'file',
-    title: '소제목3',
-    id: '125'
-  },
-  {
-    type: 'file',
-    title: '생각보다 어렵다',
-    id: '126'
-  },
-  {
-    type: 'folder',
-    title: '중제목2',
-    children: [
-      {
-        type: 'file',
-        title: '소제목1',
-        id: '7'
-      },
-      {
-        type: 'file',
-        title: '소제목2',
-        id: '8'
-      },
-      {
-        type: 'file',
-        title: '소제목3',
-        id: '9'
-      }
-    ]
-  },
-  {
-    type: 'folder',
-    title: '중제목2',
-    children: [
-      {
-        type: 'file',
-        title: '소제목1',
-        id: '57'
-      },
-      {
-        type: 'file',
-        title: '소제목2',
-        id: '58'
-      },
-      {
-        type: 'file',
-        title: '소제목3',
-        id: '59'
-      }
-    ]
-  }
-];
+import { NoteList, NoteRenderer } from 'src/container';
+
+import { RootState } from 'src/store/modules';
+import { ListItem } from 'src/store/modules/note/model';
+import { getNoteListRequest } from 'src/store/modules/note/slice';
 
 const selectedItemData = {
   title: '생각보다 어렵다',
@@ -160,20 +57,18 @@ const NoteBox = styled.div`
 const Note = () => {
   const [noteData, setNodeData] = useState(selectedItemData);
 
+  const dispatch = useDispatch();
+  const userData = useSelector((state: RootState) => state.user);
+  const { list, contents } = useSelector((state: RootState) => state.note);
+  const router = useRouter();
+
   const makeNewInput = (e: MouseEvent<HTMLDivElement>) => {
     if ((e.target as Element).classList.contains('backLayer')) {
-      setNodeData(data => ({
-        ...data,
-        contents: [
-          ...data.contents,
-          {
-            type: 'input',
-            content: '',
-            id: `${data.id}-${data.contents.length + 1}`
-          }
-        ]
-      }));
     }
+  };
+
+  const makeNewNote = (initNoteData: { title: string; type: string; id: string }) => {
+    const { id, type, title } = initNoteData;
   };
 
   const didNotWrite = (id: string) => {
@@ -183,7 +78,7 @@ const Note = () => {
     }));
   };
 
-  const saveTyping = (value: string, id: string) => {
+  const saveTyping = (value: string, id: string, type?: string) => {
     setNodeData(data => ({
       ...data,
       contents: data.contents.map((contentsData, idx) => {
@@ -199,13 +94,21 @@ const Note = () => {
     }));
   };
 
+  useEffect(() => {
+    if (!userData.id) {
+      router.push('/');
+      return;
+    }
+    dispatch(getNoteListRequest());
+  }, [dispatch, router, userData.id]);
+
   return (
     <NoteBox>
       <div>
-        <NoteList listItems={mockData} user={user} />
+        <NoteList listItems={list} user={user} makeNewNote={makeNewNote} />
       </div>
       <div onDoubleClick={makeNewInput} className='backLayer'>
-        <NoteRenderer noteItemData={noteData} didNotWrite={didNotWrite} saveTyping={saveTyping} />
+        <NoteRenderer noteItemData={contents} didNotWrite={didNotWrite} saveTyping={saveTyping} />
       </div>
     </NoteBox>
   );

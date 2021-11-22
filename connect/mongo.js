@@ -9,4 +9,4 @@ const mongoClient = new MongoClient(uri, {
   useUnifiedTopology: true
 });
 
-module.exports = mongoClient;
+export default mongoClient;

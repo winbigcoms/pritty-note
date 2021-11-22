@@ -1,11 +1,13 @@
-import React, { Dispatch, SetStateAction } from 'react';
+import React, { Dispatch, SetStateAction, useCallback } from 'react';
 
 import styled from 'styled-components';
 
-import { ListItemButton, Collapse, ListItemText } from '@mui/material';
+import { ListItemButton, ListItemText } from '@mui/material';
 
-import { ListItem } from 'src/type';
 import { NoteListFolder } from 'src/components';
+import { ListItem } from 'src/store/modules/note/model';
+import { useDispatch } from 'react-redux';
+import { getNotePageRequest } from 'src/store/modules/note/slice';
 
 const StyledListItemText = styled(ListItemText)`
   .css-10hburv-MuiTypography-root {
@@ -21,19 +23,16 @@ const MakeNavListContents = (props: {
   onSelect: Dispatch<SetStateAction<string>>;
 }) => {
   const { listItems, loop = 2, initSelectedItem, onSelect } = props;
+  const dispatch = useDispatch();
+  const onPageClick = useCallback(
+    (id: string) => {
+      dispatch(getNotePageRequest(id));
+    },
+    [dispatch]
+  );
 
   return (
     <>
-      {loop === 2 && (
-        <ListItemButton
-          selected={initSelectedItem === '0'}
-          onClick={() => {
-            onSelect('0');
-          }}
-        >
-          Home
-        </ListItemButton>
-      )}
       {listItems.map((listItem, idx) => {
         if (listItem.type === 'folder') {
           return (
@@ -53,10 +52,11 @@ const MakeNavListContents = (props: {
               sx={{ pl: loop * 2 }}
               key={idx}
               style={{
-                height: '50px'
+                height: '60px'
               }}
               selected={initSelectedItem === listItem.id}
               onClick={() => {
+                onPageClick(listItem.id);
                 onSelect(listItem.id);
               }}
             >

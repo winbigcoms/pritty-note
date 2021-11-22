@@ -16,14 +16,17 @@ const CanvasConatainer = styled.div`
     }
   }
 `;
+
 const Canvas = styled.canvas`
   border: 1px solid #000;
 `;
+
 const ColorPickerBtn = styled.button`
   background-color: #fff;
   height: 40px;
   border: 1px solid #ccc;
 `;
+
 const ColorPickerBox = styled.div`
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -37,6 +40,7 @@ const ColorPickerBox = styled.div`
     border-radius: 0px !important;
   }
 `;
+
 const RangeBox = styled.div`
   display: flex;
   justify-content: center;
@@ -47,34 +51,41 @@ const RangeBox = styled.div`
     margin-left: 10px;
   }
 `;
+
 const ResetBtn = styled.button`
   background-color: #fff;
   border: 1px solid #ddd;
   height: 40px;
 `;
+
 const SaveBtn = styled.button`
   background-color: #fff;
   border: 1px solid #ccc;
   height: 40px;
 `;
+
 const EraserBtn = styled.button`
   cursor: pointer;
   margin: 10px 0px 5px 5px;
   background-color: #fff;
   border: 1px solid #ccc;
 `;
+
 const TextBox = styled.span`
   display: inline-block;
   width: 66px;
 `;
+
 interface canvasProps {
   width: number;
   height: number;
 }
+
 interface location {
   x: number;
   y: number;
 }
+
 function downloadImage(data = '', filename = 'untitled.jpeg') {
   const a = document.createElement('a');
   a.href = data;
@@ -83,7 +94,7 @@ function downloadImage(data = '', filename = 'untitled.jpeg') {
   a.click();
 }
 
-export const Painting = ({ width, height }: canvasProps) => {
+const PaintingContents = ({ width, height }: canvasProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { color, changeColor } = useColors();
   const [showColorPicker, setShowState] = useState(false);
@@ -255,3 +266,5 @@ export const Painting = ({ width, height }: canvasProps) => {
     </CanvasConatainer>
   );
 };
+
+export const Painting = React.memo(PaintingContents);

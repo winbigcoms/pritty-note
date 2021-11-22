@@ -36,7 +36,7 @@ export const RenderText = (props: RenderTextProps) => {
 
   return isEdit ? (
     <InputTextField
-      renderData={renderData}
+      renderDataId={renderData.id}
       didNotWrite={changeStateDidNotWrite}
       saveTyping={changeStateSaveTyping}
       content={content}

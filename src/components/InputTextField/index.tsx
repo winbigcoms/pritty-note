@@ -1,15 +1,11 @@
-import { TextField } from '@mui/material';
+import { StandardTextFieldProps, TextField, TextFieldProps } from '@mui/material';
 import { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 
-interface InputTextFieldProps {
-  didNotWrite: (id: string) => void;
-  saveTyping: (value: string, id: string) => void;
-  renderData: {
-    type: string;
-    content: string;
-    id: string;
-  };
+interface InputTextFieldProps extends StandardTextFieldProps {
+  didNotWrite?: (id?: string) => void;
+  saveTyping?: (value: string, id?: string, type?: string) => void;
+  renderDataId: string;
   content?: string;
 }
 
@@ -23,14 +19,15 @@ const StyledTextField = styled(TextField)`
 `;
 
 export const InputTextField = (props: InputTextFieldProps) => {
-  const { didNotWrite, saveTyping, content, renderData } = props;
+  const { didNotWrite, saveTyping, content, renderDataId, ...rest } = props;
   const TextRef = useRef(null);
 
   const typingHandler = (value: string) => {
     if (!value) {
-      didNotWrite(renderData.id);
+      didNotWrite && didNotWrite(renderDataId);
+      return;
     }
-    saveTyping(value, renderData.id);
+    saveTyping && saveTyping(value, renderDataId);
   };
 
   const onEndTyping = e => {
@@ -52,6 +49,7 @@ export const InputTextField = (props: InputTextFieldProps) => {
       onBlur={onEndTyping}
       defaultValue={content}
       onKeyPress={onPressEnter}
+      {...rest}
     />
   );
 };

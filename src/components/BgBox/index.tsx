@@ -17,9 +17,10 @@ const Box = styled.div`
 
   img {
     object-fit: contain;
+    border-radius: 15px;
   }
 
-  & > div {
+  & > *:nth-child(2) {
     position: absolute;
     left: 50%;
     top: 50%;
@@ -39,11 +40,13 @@ const Box = styled.div`
       box-shadow: 0px 0px 0px;
     }
   }
+  .MuiSnackbarContent-root {
+    background-color: #fff;
+  }
 `;
 
 export const BgBox = (props: BgBoxProps) => {
   const { img, children, setImgSrc } = props;
-  
 
   return (
     <Box>
@@ -53,8 +56,8 @@ export const BgBox = (props: BgBoxProps) => {
         layout='fill'
         priority={img ? false : true}
       />
-      {setImgSrc && <FileUpload setImgSrc={setImgSrc} />}
       {children}
+      {setImgSrc && <FileUpload setImgSrc={setImgSrc} />}
     </Box>
   );
 };

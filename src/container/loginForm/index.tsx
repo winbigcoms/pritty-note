@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 
 import styled from 'styled-components';
 
 import { CustomButton, CustomText } from 'src/components';
 import { useRouter } from 'next/dist/client/router';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginRequest } from 'src/store/modules/user/slice';
+import { RootState } from 'src/store/modules';
 
 const LoginFormBox = styled.div`
   width:60%
@@ -49,22 +52,51 @@ const FlexBox = styled.div`
   display: flex;
 `;
 
+type inputIdType = 'id' | 'pw';
+
 const LoginFormContents = () => {
+  const [loginData, setLoginData] = useState({
+    id: '',
+    pw: ''
+  });
+
   const router = useRouter();
+  const dispatch = useDispatch();
+  const isLogin = useSelector((state: RootState) => state.user).id !== '';
 
   const onLogin = () => {
-    router.push('/note');
+    for (let inputData in loginData) {
+      if (!loginData[inputData as inputIdType]) return;
+    }
+    dispatch(loginRequest(loginData));
   };
 
   const onSignUp = () => {
-    router.push('/signUp',undefined,{shallow:true});
+    router.push('/signUp', undefined, { shallow: true });
   };
+
+  const onChangeLoginData = (e: ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target;
+    setLoginData(state => ({ ...state, [id]: value }));
+  };
+
+  useEffect(() => {
+    if (isLogin) {
+      router.push('/note');
+    }
+  }, [isLogin, router]);
 
   return (
     <LoginFormBox>
       <h2>Pritty Note</h2>
-      <CustomText label='ID' />
-      <CustomText label='PW' type='password' />
+      <CustomText label='id' id='id' value={loginData.id} onChange={onChangeLoginData} />
+      <CustomText
+        label='pw'
+        id='pw'
+        type='password'
+        value={loginData.pw}
+        onChange={onChangeLoginData}
+      />
       <FlexBox>
         <CustomButton onClick={onLogin} variant='outlined' text='Login' />
         <CustomButton onClick={onSignUp} variant='outlined' text='SignUp' />
