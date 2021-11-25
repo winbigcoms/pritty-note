@@ -39,7 +39,7 @@ export const FileUpload = props => {
   const uploadImg = (e: ChangeEvent<HTMLInputElement>) => {
     const target = e.target as HTMLInputElement;
     const files = target.files as FileList;
-    makeBase64(files[0]).then(res => console.log(res));
+    makeBase64(files[0]).then(res => res);
   };
 
   return (

@@ -6,8 +6,10 @@ import { ListItemButton, ListItemText } from '@mui/material';
 
 import { NoteListFolder } from 'src/components';
 import { ListItem } from 'src/store/modules/note/model';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getNotePageRequest } from 'src/store/modules/note/slice';
+import { NavListItemButton } from '../NavListItemButton';
+import { RootState } from 'src/store/modules';
 
 const StyledListItemText = styled(ListItemText)`
   .css-10hburv-MuiTypography-root {
@@ -19,17 +21,18 @@ const StyledListItemText = styled(ListItemText)`
 const MakeNavListContents = (props: {
   listItems: ListItem[];
   loop?: number;
-  initSelectedItem: string;
+  selectedItem: string;
   onSelect: Dispatch<SetStateAction<string>>;
 }) => {
-  const { listItems, loop = 2, initSelectedItem, onSelect } = props;
+  const { listItems, loop = 2, selectedItem, onSelect } = props;
+
   const dispatch = useDispatch();
-  const onPageClick = useCallback(
-    (id: string) => {
-      dispatch(getNotePageRequest(id));
-    },
-    [dispatch]
-  );
+
+  const { id } = useSelector((store: RootState) => store.user);
+
+  const onPageClick = (id: string) => {
+    onSelect(id);
+  };
 
   return (
     <>
@@ -39,7 +42,7 @@ const MakeNavListContents = (props: {
             <React.Fragment key={idx}>
               <NoteListFolder
                 loop={loop}
-                initSelectedItem={initSelectedItem}
+                initSelectedItem={selectedItem}
                 primary={listItem.title}
                 listItems={listItem.children}
                 onSelect={onSelect}
@@ -48,20 +51,15 @@ const MakeNavListContents = (props: {
           );
         } else {
           return (
-            <ListItemButton
-              sx={{ pl: loop * 2 }}
+            <NavListItemButton
+              onSelect={onSelect}
               key={idx}
-              style={{
-                height: '60px'
-              }}
-              selected={initSelectedItem === listItem.id}
-              onClick={() => {
-                onPageClick(listItem.id);
-                onSelect(listItem.id);
-              }}
-            >
-              <StyledListItemText primary={listItem.title} />
-            </ListItemButton>
+              loop={loop}
+              selected={selectedItem === listItem.id}
+              title={listItem.title}
+              noteId={listItem.id}
+              loginId={id}
+            />
           );
         }
       })}

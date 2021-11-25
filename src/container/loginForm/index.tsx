@@ -61,8 +61,8 @@ const LoginFormContents = () => {
   });
 
   const router = useRouter();
+  const loginId = useSelector((state: RootState) => state.user).id;
   const dispatch = useDispatch();
-  const isLogin = useSelector((state: RootState) => state.user).id !== '';
 
   const onLogin = () => {
     for (let inputData in loginData) {
@@ -81,10 +81,10 @@ const LoginFormContents = () => {
   };
 
   useEffect(() => {
-    if (isLogin) {
-      router.push('/note');
+    if (loginId !== '') {
+      router.push(`/note/${loginId}/0`);
     }
-  }, [isLogin, router]);
+  }, [loginId, router]);
 
   return (
     <LoginFormBox>

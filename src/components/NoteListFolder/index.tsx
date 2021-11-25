@@ -1,10 +1,10 @@
 import { Dispatch, SetStateAction, useState } from 'react';
-import { ListItem } from 'src/type';
 import { MakeNavList } from 'src/components';
 import { ListItemButton, ListItemText, Collapse, List } from '@mui/material';
 import styled from 'styled-components';
 import FolderIcon from '@mui/icons-material/Folder';
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
+import { ListItem } from 'src/store/modules/note/model';
 
 interface NoteListFolderProps {
   loop: number;
@@ -42,7 +42,7 @@ export const NoteListFolder = (props: NoteListFolderProps) => {
             <MakeNavList
               listItems={listItems}
               loop={loop + 1}
-              initSelectedItem={initSelectedItem}
+              selectedItem={initSelectedItem}
               onSelect={onSelect}
             />
           }
@@ -51,5 +51,3 @@ export const NoteListFolder = (props: NoteListFolderProps) => {
     </>
   );
 };
-
-

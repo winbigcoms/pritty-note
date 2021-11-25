@@ -19,5 +19,23 @@ export default function note(req: NextApiRequest, res: NextApiResponse) {
         return resolve();
       }
     }
+    if (req.method === 'POST') {
+      try {
+        mongoClient.connect(async err => {
+          const { pageId, owner, contentId, content, type } = req.query;
+          if (type === 'title') {
+            await mongoClient
+              .db('note')
+              .collection('file')
+              .updateOne({ id: pageId, owner }, { $set: { title: content } });
+          } else {
+            await mongoClient
+              .db('note')
+              .collection('file')
+              .updateOne({ id: pageId, owner, 'contents.id': contentId }, { $set: { content } });
+          }
+        });
+      } catch (err) {}
+    }
   });
 }

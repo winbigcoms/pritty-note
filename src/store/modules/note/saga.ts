@@ -31,7 +31,6 @@ function* getNotePageSaga(action: PayloadAction<string>) {
     yield put(getNotePageSuccess({ title, contents, id, type: 'file' }));
   } catch (err) {
     yield put(getNotePageFail());
-    console.log(err);
   }
 }
 

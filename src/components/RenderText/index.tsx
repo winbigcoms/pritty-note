@@ -3,8 +3,10 @@ import { InputTextField } from 'src/components';
 
 interface RenderTextProps {
   didNotWrite: (id: string) => void;
-  saveTyping: (value: string, id: string) => void;
+  saveTyping: (value: string, id: string, type: string, contentId: string) => void;
   content: string;
+  type: string;
+  contentId: string;
   renderData: {
     type: string;
     content: string;
@@ -13,7 +15,7 @@ interface RenderTextProps {
 }
 
 export const RenderText = (props: RenderTextProps) => {
-  const { didNotWrite, saveTyping, content, renderData } = props;
+  const { didNotWrite, saveTyping, content, renderData, type, contentId } = props;
 
   const [isEdit, setEditState] = useState(false);
 
@@ -31,7 +33,7 @@ export const RenderText = (props: RenderTextProps) => {
   };
   const changeStateSaveTyping = (value: string, id: string) => {
     changeMode();
-    saveTyping(value, id);
+    saveTyping(value, id, type, contentId);
   };
 
   return isEdit ? (

@@ -1,4 +1,4 @@
-import { MouseEvent } from 'react';
+import { useEffect, useState } from 'react';
 
 import styled from 'styled-components';
 
@@ -8,9 +8,7 @@ import { NoteItemData } from 'src/type';
 import { NoteHome } from '..';
 
 interface NoteRendererProps {
-  saveTyping: (value: string, id: string) => void;
   noteItemData: NoteItemData | undefined;
-  didNotWrite: (id: string) => void;
 }
 
 const NoteRenderContainer = styled.div`
@@ -31,7 +29,41 @@ const NoteRenderContainer = styled.div`
 `;
 
 export const NoteRenderer = (props: NoteRendererProps) => {
-  const { noteItemData, didNotWrite, saveTyping } = props;
+  const { noteItemData } = props;
+  const [noteItemState, setNoteItemState] = useState<NoteItemData>();
+
+  const didNotWrite = (id: string) => {
+    setNoteItemState(data => ({
+      ...data,
+      contents: data.contents.filter(item => item.id !== id)
+    }));
+  };
+
+  const saveTyping = (value: string, id: string, type: string, contentId: string) => {
+    setNoteItemState(data => {
+      return {
+        ...data,
+        [type]:
+          type === 'title'
+            ? value
+            : data.contents.map((contentsData, idx) => {
+                if (contentsData.id === id) {
+                  return {
+                    type: 'text',
+                    content: value,
+                    id: `${data.id}-${idx}`
+                  };
+                }
+                return contentsData;
+              })
+      };
+    });
+  };
+
+  useEffect(() => {
+    setNoteItemState(noteItemData);
+  }, [noteItemData]);
+
   if (!noteItemData) {
     return (
       <NoteRenderContainer>
@@ -40,15 +72,17 @@ export const NoteRenderer = (props: NoteRendererProps) => {
     );
   }
 
-  return (
+  return noteItemState ? (
     <NoteRenderContainer>
-      <h2>제목: {noteItemData.title}</h2>
-      {noteItemData.contents.map((contentData, idx) => {
+      <h2>제목: {noteItemState.title}</h2>
+      {noteItemState.contents.map((contentData, idx) => {
         if (contentData.type === 'text') {
           return (
             <RenderText
+              type='contents'
               key={idx}
               content={contentData.content}
+              contentId={contentData.id}
               saveTyping={saveTyping}
               didNotWrite={didNotWrite}
               renderData={contentData}
@@ -56,17 +90,10 @@ export const NoteRenderer = (props: NoteRendererProps) => {
           );
         } else if (contentData.type === 'paint') {
           return <Painting key={idx} width={400} height={400} />;
-        } else {
-          return (
-            <InputTextField
-              key={idx}
-              saveTyping={saveTyping}
-              didNotWrite={didNotWrite}
-              renderDataId={contentData.id}
-            />
-          );
         }
       })}
     </NoteRenderContainer>
+  ) : (
+    <div>로딩중</div>
   );
 };

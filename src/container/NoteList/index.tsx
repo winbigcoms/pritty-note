@@ -19,6 +19,7 @@ import { InputTextField, MakeNavList } from 'src/components';
 import { NoteListType } from 'src/type';
 import { useDispatch } from 'react-redux';
 import { resetNotePage } from 'src/store/modules/note/slice';
+import { useRouter } from 'next/dist/client/router';
 
 const StyledListSubheader = styled(ListSubheader)`
   width: 100%;
@@ -94,6 +95,7 @@ export const NoteList = (props: NoteListType) => {
   });
 
   const dispatch = useDispatch();
+  const router = useRouter();
 
   const onShowNewNoteMaker = () => {
     setShowNewNoteMaker(state => !state);
@@ -124,6 +126,10 @@ export const NoteList = (props: NoteListType) => {
     dispatch(resetNotePage());
   };
 
+  const onSelectPage = (loginId, pageId) => {
+    router.push(`/note/${loginId}/${pageId}`);
+  };
+
   return (
     <List
       style={{
@@ -140,13 +146,13 @@ export const NoteList = (props: NoteListType) => {
         <ListItemButton
           selected={selectedItem === '0'}
           onClick={() => {
-            onClickHome();
+            onSelectPage(user.id, '0');
             selectItem('0');
           }}
         >
           Home
         </ListItemButton>
-        <MakeNavList listItems={listItems} initSelectedItem={selectedItem} onSelect={selectItem} />
+        <MakeNavList listItems={listItems} selectedItem={selectedItem} onSelect={selectItem} />
         <NewNoteButtonMakerContainer>
           {showNewNoteMaker && (
             <NewNoteContainer>
